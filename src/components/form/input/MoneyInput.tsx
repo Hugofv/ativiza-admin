@@ -41,10 +41,22 @@ const MoneyInput = forwardRef<HTMLInputElement, MoneyInputProps>(
     },
     ref
   ) => {
+    // Normalize value for react-number-format: only accept number, string, or undefined
+    let normalizedValue: number | string | undefined = undefined;
+    
+    if (value === null || value === undefined || value === '') {
+      normalizedValue = undefined;
+    } else if (typeof value === 'number') {
+      normalizedValue = isNaN(value) ? undefined : value;
+    } else if (typeof value === 'string') {
+      normalizedValue = value;
+    }
+    // If value is any other type, use undefined
+    
     return (
       <NumericFormat
         getInputRef={ref}
-        value={value}
+        value={normalizedValue}
         onValueChange={(values) => {
           if (onChange) {
             onChange(values.floatValue);

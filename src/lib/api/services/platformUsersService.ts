@@ -3,7 +3,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface PlatformUser {
   id: number;
@@ -51,49 +51,37 @@ export const platformUsersService = {
    * Get all platform users
    */
   async getAll(params?: PlatformUsersListParams): Promise<PaginatedResponse<PlatformUser>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<PlatformUser>>>(
+    const response = await apiClient.get<PaginatedResponse<PlatformUser>>(
       '/api/platform-users',
       {
         params,
       }
     );
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch platform users');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get platform user by ID
    */
   async getById(id: number): Promise<PlatformUser> {
-    const response = await apiClient.get<ApiResponse<PlatformUser>>(`/api/platform-users/${id}`);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch platform user');
-    }
-    return response.data.data;
+    const response = await apiClient.get<PlatformUser>(`/api/platform-users/${id}`);
+    return response.data;
   },
 
   /**
    * Create new platform user
    */
   async create(data: CreatePlatformUserData): Promise<PlatformUser> {
-    const response = await apiClient.post<ApiResponse<PlatformUser>>('/api/platform-users', data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to create platform user');
-    }
-    return response.data.data;
+    const response = await apiClient.post<PlatformUser>('/api/platform-users', data);
+    return response.data;
   },
 
   /**
    * Update platform user
    */
   async update(id: number, data: UpdatePlatformUserData): Promise<PlatformUser> {
-    const response = await apiClient.put<ApiResponse<PlatformUser>>(`/api/platform-users/${id}`, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to update platform user');
-    }
-    return response.data.data;
+    const response = await apiClient.put<PlatformUser>(`/api/platform-users/${id}`, data);
+    return response.data;
   },
 
   /**

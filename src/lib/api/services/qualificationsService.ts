@@ -3,7 +3,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface Qualification {
   id: number;
@@ -43,49 +43,37 @@ export const qualificationsService = {
    * Get all qualifications
    */
   async getAll(params?: QualificationsListParams): Promise<PaginatedResponse<Qualification>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<Qualification>>>(
+    const response = await apiClient.get<PaginatedResponse<Qualification>>(
       QUALIFICATIONS_API_URL,
       {
         params,
       }
     );
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch qualifications');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get qualification by ID
    */
   async getById(id: number): Promise<Qualification> {
-    const response = await apiClient.get<ApiResponse<Qualification>>(`${QUALIFICATIONS_API_URL}/${id}`);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch qualification');
-    }
-    return response.data.data;
+    const response = await apiClient.get<Qualification>(`${QUALIFICATIONS_API_URL}/${id}`);
+    return response.data;
   },
 
   /**
    * Create new qualification
    */
   async create(data: CreateQualificationData): Promise<Qualification> {
-    const response = await apiClient.post<ApiResponse<Qualification>>(QUALIFICATIONS_API_URL, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to create qualification');
-    }
-    return response.data.data;
+    const response = await apiClient.post<Qualification>(QUALIFICATIONS_API_URL, data);
+    return response.data;
   },
 
   /**
    * Update qualification
    */
   async update(id: number, data: UpdateQualificationData): Promise<Qualification> {
-    const response = await apiClient.put<ApiResponse<Qualification>>(`${QUALIFICATIONS_API_URL}/${id}`, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to update qualification');
-    }
-    return response.data.data;
+    const response = await apiClient.put<Qualification>(`${QUALIFICATIONS_API_URL}/${id}`, data);
+    return response.data;
   },
 
   /**

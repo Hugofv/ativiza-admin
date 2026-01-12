@@ -4,7 +4,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface Operation {
   id: string;
@@ -20,34 +20,34 @@ export const operationsService = {
     limit?: number;
     search?: string;
   }): Promise<PaginatedResponse<Operation>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<Operation>>>('/api/operations', {
+    const response = await apiClient.get<PaginatedResponse<Operation>>('/api/operations', {
       params,
     });
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get operation by ID
    */
   async getById(id: string): Promise<Operation> {
-    const response = await apiClient.get<ApiResponse<Operation>>(`/api/operations/${id}`);
-    return response.data.data;
+    const response = await apiClient.get<Operation>(`/api/operations/${id}`);
+    return response.data;
   },
 
   /**
    * Create new operation
    */
   async create(data: Partial<Operation>): Promise<Operation> {
-    const response = await apiClient.post<ApiResponse<Operation>>('/api/operations', data);
-    return response.data.data;
+    const response = await apiClient.post<Operation>('/api/operations', data);
+    return response.data;
   },
 
   /**
    * Update operation
    */
   async update(id: string, data: Partial<Operation>): Promise<Operation> {
-    const response = await apiClient.put<ApiResponse<Operation>>(`/api/operations/${id}`, data);
-    return response.data.data;
+    const response = await apiClient.put<Operation>(`/api/operations/${id}`, data);
+    return response.data;
   },
 
   /**

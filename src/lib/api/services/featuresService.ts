@@ -3,7 +3,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface ModuleOption {
   value: number;
@@ -65,49 +65,37 @@ export const featuresService = {
    * Get all features
    */
   async getAll(params?: FeaturesListParams): Promise<PaginatedResponse<Feature>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<Feature>>>(
+    const response = await apiClient.get<PaginatedResponse<Feature>>(
       FEATURES_API_URL,
       {
         params,
       }
     );
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch features');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get feature by ID
    */
   async getById(id: number): Promise<Feature> {
-    const response = await apiClient.get<ApiResponse<Feature>>(`${FEATURES_API_URL}/${id}`);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch feature');
-    }
-    return response.data.data;
+    const response = await apiClient.get<Feature>(`${FEATURES_API_URL}/${id}`);
+    return response.data;
   },
 
   /**
    * Create new feature
    */
   async create(data: CreateFeatureData): Promise<Feature> {
-    const response = await apiClient.post<ApiResponse<Feature>>(FEATURES_API_URL, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to create feature');
-    }
-    return response.data.data;
+    const response = await apiClient.post<Feature>(FEATURES_API_URL, data);
+    return response.data;
   },
 
   /**
    * Update feature
    */
   async update(id: number, data: UpdateFeatureData): Promise<Feature> {
-    const response = await apiClient.put<ApiResponse<Feature>>(`${FEATURES_API_URL}/${id}`, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to update feature');
-    }
-    return response.data.data;
+    const response = await apiClient.put<Feature>(`${FEATURES_API_URL}/${id}`, data);
+    return response.data;
   },
 
   /**

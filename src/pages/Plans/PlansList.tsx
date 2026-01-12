@@ -99,8 +99,18 @@ export default function PlansList() {
     );
   };
 
-  const calculateTotalPrice = (features: Plan['features']) => {
-    return features.reduce((sum, feature) => sum + feature.price, 0);
+  const calculateTotalPrice = (plan: Plan) => {
+    // Use the plan's prices array - prefer default or BRL
+    if (!plan.prices || plan.prices.length === 0) {
+      return 0;
+    }
+    
+    // Find default price, or BRL, or first price
+    const defaultPrice = plan.prices.find((p) => p.isDefault);
+    const brlPrice = plan.prices.find((p) => p.currency === 'BRL');
+    const price = defaultPrice || brlPrice || plan.prices[0];
+    
+    return price?.price || 0;
   };
 
   return (
@@ -204,7 +214,12 @@ export default function PlansList() {
                           {plan.features.length} feature{plan.features.length !== 1 ? 's' : ''}
                         </TableCell>
                         <TableCell className="px-5 py-4 text-sm font-medium text-gray-800 dark:text-white/90">
-                          R$ {calculateTotalPrice(plan.features).toFixed(2).replace('.', ',')}
+                          {(() => {
+                            const total = calculateTotalPrice(plan);
+                            return Number.isFinite(total) && total > 0
+                              ? `R$ ${total.toFixed(2).replace('.', ',')}`
+                              : '-';
+                          })()}
                         </TableCell>
                         <TableCell className="px-5 py-4 text-sm">
                           {getStatusBadge(plan.isActive)}

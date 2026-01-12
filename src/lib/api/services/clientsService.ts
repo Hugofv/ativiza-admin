@@ -4,7 +4,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface Client {
   id: string;
@@ -22,34 +22,34 @@ export const clientsService = {
     limit?: number;
     search?: string;
   }): Promise<PaginatedResponse<Client>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<Client>>>('/api/clients', {
+    const response = await apiClient.get<PaginatedResponse<Client>>('/api/clients', {
       params,
     });
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get client by ID
    */
   async getById(id: string): Promise<Client> {
-    const response = await apiClient.get<ApiResponse<Client>>(`/api/clients/${id}`);
-    return response.data.data;
+    const response = await apiClient.get<Client>(`/api/clients/${id}`);
+    return response.data;
   },
 
   /**
    * Create new client
    */
   async create(data: Partial<Client>): Promise<Client> {
-    const response = await apiClient.post<ApiResponse<Client>>('/api/clients', data);
-    return response.data.data;
+    const response = await apiClient.post<Client>('/api/clients', data);
+    return response.data;
   },
 
   /**
    * Update client
    */
   async update(id: string, data: Partial<Client>): Promise<Client> {
-    const response = await apiClient.put<ApiResponse<Client>>(`/api/clients/${id}`, data);
-    return response.data.data;
+    const response = await apiClient.put<Client>(`/api/clients/${id}`, data);
+    return response.data;
   },
 
   /**

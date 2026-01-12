@@ -3,7 +3,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface Account {
   id: string;
@@ -53,46 +53,34 @@ export const accountsService = {
    * Get all accounts
    */
   async getAll(params?: AccountsListParams): Promise<PaginatedResponse<Account>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<Account>>>('/api/accounts', {
+    const response = await apiClient.get<PaginatedResponse<Account>>('/api/accounts', {
       params,
     });
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch accounts');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get account by ID
    */
   async getById(id: string): Promise<Account> {
-    const response = await apiClient.get<ApiResponse<Account>>(`/api/accounts/${id}`);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch account');
-    }
-    return response.data.data;
+    const response = await apiClient.get<Account>(`/api/accounts/${id}`);
+    return response.data;
   },
 
   /**
    * Create new account
    */
   async create(data: CreateAccountData): Promise<Account> {
-    const response = await apiClient.post<ApiResponse<Account>>('/api/accounts', data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to create account');
-    }
-    return response.data.data;
+    const response = await apiClient.post<Account>('/api/accounts', data);
+    return response.data;
   },
 
   /**
    * Update account
    */
   async update(id: string, data: UpdateAccountData): Promise<Account> {
-    const response = await apiClient.put<ApiResponse<Account>>(`/api/accounts/${id}`, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to update account');
-    }
-    return response.data.data;
+    const response = await apiClient.put<Account>(`/api/accounts/${id}`, data);
+    return response.data;
   },
 
   /**

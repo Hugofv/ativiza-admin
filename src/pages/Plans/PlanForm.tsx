@@ -244,12 +244,14 @@ export default function PlanForm() {
 
   const getTotalPrice = (currency: string = 'BRL') => {
     const features = methods.watch('features') || [];
-    return features
+    const total = features
       .filter((feature) => feature.isEnabled)
       .reduce((sum, feature) => {
         const price = feature.prices?.find((p) => p.currency === currency);
-        return sum + (price?.price || 0);
+        const priceValue = typeof price?.price === 'number' ? price.price : 0;
+        return sum + priceValue;
       }, 0);
+    return Number.isFinite(total) ? total : 0;
   };
 
   return (
@@ -765,7 +767,7 @@ export default function PlanForm() {
                         <div className='p-4 bg-gray-50 rounded-lg dark:bg-gray-800 space-y-2'>
                           {CURRENCIES.map((currency) => {
                             const total = getTotalPrice(currency.value);
-                            if (total === 0) return null;
+                            if (total === 0 || !Number.isFinite(total)) return null;
                             return (
                               <div
                                 key={currency.value}
@@ -776,7 +778,7 @@ export default function PlanForm() {
                                 </span>
                                 <span className='text-lg font-bold text-gray-900 dark:text-white'>
                                   {currency.symbol}{' '}
-                                  {total.toFixed(2).replace('.', ',')}
+                                  {Number(total).toFixed(2).replace('.', ',')}
                                 </span>
                               </div>
                             );

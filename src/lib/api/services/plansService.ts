@@ -3,7 +3,7 @@
  */
 
 import apiClient from '../client';
-import { ApiResponse, PaginatedResponse } from '../types';
+import { PaginatedResponse } from '../types';
 
 export interface PlanFeaturePrice {
   currency: string; // e.g., "BRL", "USD", "EUR"
@@ -106,49 +106,37 @@ export const plansService = {
    * Get all plans
    */
   async getAll(params?: PlansListParams): Promise<PaginatedResponse<Plan>> {
-    const response = await apiClient.get<ApiResponse<PaginatedResponse<Plan>>>(
+    const response = await apiClient.get<PaginatedResponse<Plan>>(
       PLANS_API_URL,
       {
         params,
       }
     );
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch plans');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Get plan by ID
    */
   async getById(id: number): Promise<Plan> {
-    const response = await apiClient.get<ApiResponse<Plan>>(`${PLANS_API_URL}/${id}`);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to fetch plan');
-    }
-    return response.data.data;
+    const response = await apiClient.get<Plan>(`${PLANS_API_URL}/${id}`);
+    return response.data;
   },
 
   /**
    * Create new plan
    */
   async create(data: CreatePlanData): Promise<Plan> {
-    const response = await apiClient.post<ApiResponse<Plan>>(PLANS_API_URL, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to create plan');
-    }
-    return response.data.data;
+    const response = await apiClient.post<Plan>(PLANS_API_URL, data);
+    return response.data;
   },
 
   /**
    * Update plan
    */
   async update(id: number, data: UpdatePlanData): Promise<Plan> {
-    const response = await apiClient.put<ApiResponse<Plan>>(`${PLANS_API_URL}/${id}`, data);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to update plan');
-    }
-    return response.data.data;
+    const response = await apiClient.put<Plan>(`${PLANS_API_URL}/${id}`, data);
+    return response.data;
   },
 
   /**

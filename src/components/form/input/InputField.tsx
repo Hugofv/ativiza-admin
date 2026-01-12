@@ -46,6 +46,9 @@ const Input: FC<InputProps> = ({
     inputClasses += ` bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:border-gray-700 dark:text-white/90  dark:focus:border-brand-800`;
   }
 
+  // Convert null to empty string for controlled input
+  const inputValue = value === null ? '' : value ?? '';
+  
   return (
     <div className="relative">
       <input
@@ -53,7 +56,7 @@ const Input: FC<InputProps> = ({
         id={id}
         name={name}
         placeholder={placeholder}
-        value={value}
+        value={inputValue}
         onChange={onChange}
         min={min}
         max={max}

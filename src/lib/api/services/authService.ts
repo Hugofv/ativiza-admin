@@ -3,18 +3,15 @@
  */
 
 import apiClient from '../client';
-import { LoginRequest, LoginResponse, RefreshTokenResponse, ApiResponse, User } from '../types';
+import { LoginRequest, LoginResponse, RefreshTokenResponse, User } from '../types';
 
 export const authService = {
   /**
    * Login user
    */
   async login(credentials: LoginRequest): Promise<LoginResponse> {
-    const response = await apiClient.post<ApiResponse<LoginResponse>>('/auth/login', credentials);
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Login failed');
-    }
-    return response.data.data;
+    const response = await apiClient.post<LoginResponse>('/auth/login', credentials);
+    return response.data;
   },
 
   /**
@@ -22,7 +19,7 @@ export const authService = {
    */
   async logout(): Promise<void> {
     try {
-      await apiClient.post<ApiResponse<{ message: string }>>('/auth/logout');
+      await apiClient.post('/auth/logout');
     } catch (error) {
       // Continue with logout even if API call fails
       console.error('Logout API error:', error);
@@ -39,51 +36,39 @@ export const authService = {
    * Get current user
    */
   async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get<ApiResponse<User>>('/auth/me');
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to get user');
-    }
-    return response.data.data;
+    const response = await apiClient.get<User>('/auth/me');
+    return response.data;
   },
 
   /**
    * Refresh access token
    */
   async refreshToken(refreshToken: string): Promise<RefreshTokenResponse> {
-    const response = await apiClient.post<ApiResponse<RefreshTokenResponse>>('/auth/refresh', {
+    const response = await apiClient.post<RefreshTokenResponse>('/auth/refresh', {
       refreshToken,
     });
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Token refresh failed');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Request password reset
    */
   async forgotPassword(email: string): Promise<{ message: string }> {
-    const response = await apiClient.post<ApiResponse<{ message: string }>>('/auth/forgot-password', {
+    const response = await apiClient.post<{ message: string }>('/auth/forgot-password', {
       email,
     });
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to send reset email');
-    }
-    return response.data.data;
+    return response.data;
   },
 
   /**
    * Reset password with token
    */
   async resetPassword(token: string, password: string): Promise<{ message: string }> {
-    const response = await apiClient.post<ApiResponse<{ message: string }>>('/auth/reset-password', {
+    const response = await apiClient.post<{ message: string }>('/auth/reset-password', {
       token,
       password,
     });
-    if (!response.data.success) {
-      throw new Error(response.data.error?.message || 'Failed to reset password');
-    }
-    return response.data.data;
+    return response.data;
   },
 };
 
